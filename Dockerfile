@@ -2,9 +2,9 @@ FROM ubuntu:latest
 
 MAINTAINER Horia Coman <horia141@gmail.com>
 
-RUN apt-get update -y
-RUN apt-get install -y --no-install-recommends python python-pip
-RUN apt-get clean
+RUN apt-get update -y && \
+    apt-get install -y --no-install-recommends python python-pip && \
+    apt-get clean
 
 RUN mkdir /ocelot
 RUN mkdir /ocelot/pack
@@ -20,4 +20,4 @@ RUN chown -R ocelot:ocelot /ocelot
 WORKDIR /ocelot
 EXPOSE 10000
 USER ocelot
-ENTRYPOINT ["gunicorn", "identity:app"]
+ENTRYPOINT ["gunicorn", "--bind", "0.0.0.0:10000", "identity.server:app"]
