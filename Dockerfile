@@ -13,6 +13,8 @@ COPY . /ocelot/pack/identity
 
 RUN cd /ocelot/pack/identity && python setup.py install
 
+RUN gunicorn --check-config identity.server:app
+
 RUN groupadd ocelot && \
     useradd -ms /bin/bash -g ocelot ocelot
 RUN chown -R ocelot:ocelot /ocelot
@@ -20,4 +22,4 @@ RUN chown -R ocelot:ocelot /ocelot
 WORKDIR /ocelot
 EXPOSE 10000
 USER ocelot
-ENTRYPOINT ["gunicorn", "--bind", "0.0.0.0:10000", "identity.server:app"]
+ENTRYPOINT ["gunicorn", "--config", "pack/identity/src/identity/config.py", "identity.server:app"]
