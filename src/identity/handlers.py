@@ -1,5 +1,6 @@
 import falcon
 
+
 class IdentityResource(object):
     def on_get(self, req, resp):
         """Handles GET requestss"""
