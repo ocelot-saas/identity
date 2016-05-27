@@ -19,8 +19,8 @@ script:
 after_success: coveralls
 
 deploy:
-  skip_cleanup: true
   - provider: script
+    skip_cleanup: true
     script: bin/togemfury.sh
   - provider: heroku
     app: ocelot-api-identity
