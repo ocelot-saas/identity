@@ -13,3 +13,6 @@
 
 # Node packages
 /node_modules/
+
+# Output of coverage tools.
+/coverage/
