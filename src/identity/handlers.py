@@ -1,8 +1,35 @@
+"""Handlers for HTTP resources."""
+
 import falcon
 
 
-class IdentityResource(object):
+class UsersResource(object):
+    """A collection of users.
+
+    Handles creation, and 'retrieval' via auth token.
+    """
+
     def on_get(self, req, resp):
-        """Handles GET requestss"""
+        """GET a particular user.
+
+        GET with a given auth token retrieves the respective user.
+        GET with an email and password retrieves the respective user.
+        """
+
+        resp.status = falcon.HTTP_200
+        resp.body = 'Hello falcon'
+
+    def on_post(self, req, resp):
+        """POST creates a user, with a given email and password."""
+        resp.status = falcon.HTTP_200
+        resp.body = 'Hello falcon'
+
+
+class CheckMailResouce(object):
+    """An RPC style resource for checking whether an email is in use or not."""
+
+    def on_get(self, req, resp):
+        """GET checks to see if a particular email is in use."""
+
         resp.status = falcon.HTTP_200
         resp.body = 'Hello falcon'
