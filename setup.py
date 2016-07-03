@@ -1,3 +1,5 @@
+"""Identity service setup.py"""
+
 from glob import glob
 from os.path import basename
 from os.path import splitext
@@ -7,13 +9,14 @@ from setuptools import setup
 
 
 def readme():
+    """Long form readme for the identity service."""
     with open('README.md') as readme_file:
         return readme_file.read()
 
 
 setup(
     name='identity',
-    version='0.0.5',
+    version='0.0.6',
     description='The identity service for Ocelot, as a Python package.',
     long_description=readme(),
     keywords='ocelot identity service rest api',
@@ -27,6 +30,8 @@ setup(
     install_requires=[
         'falcon>=1,<2',
         'gunicorn>=19,<20',
+        'secrets>=0,<1',
+        'validate_email>=1,<2',
         ],
     test_suite='tests',
     tests_require=[],

@@ -11,9 +11,9 @@ env:
 install:
 - pip install coveralls
 - pip install coverage
-- pip install -r requirements.txt
+- pip install -r requirements.txt --extra-index-url https://pypi.fury.io/$GEMFURY_KEY/ocelot-saas/
 
-script: 
+script:
 - coverage run --source=identity --module unittest discover --verbose
 
 after_success: coveralls

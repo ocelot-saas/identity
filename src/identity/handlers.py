@@ -9,6 +9,9 @@ class UsersResource(object):
     Handles creation, and 'retrieval' via auth token.
     """
 
+    def __init__(self, identity_validator):
+        self._identity_validator = identity_validator
+
     def on_get(self, req, resp):
         """GET a particular user.
 
@@ -23,6 +26,12 @@ class UsersResource(object):
         """POST creates a user, with a given email and password."""
         resp.status = falcon.HTTP_200
         resp.body = 'Hello falcon'
+
+    def _on_get_auth_token(self, req, resp):
+        pass
+
+    def _on_get_email_and_pass(self, req, resp):
+        pass
 
 
 class CheckMailResouce(object):
