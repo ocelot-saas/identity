@@ -28,9 +28,13 @@ setup(
     package_dir={'': 'src'},
     py_modules=[splitext(basename(path))[0] for path in glob('src/*.py')],
     install_requires=[
+        'clock==0.0.1',
         'falcon>=1,<2',
         'gunicorn>=19,<20',
+        'jsonschema>=2,<3',
+        'pytz==2015.7',
         'secrets>=0,<1',
+        'sqlalchemy>=1,<2',
         'validate_email>=1,<2',
         ],
     test_suite='tests',

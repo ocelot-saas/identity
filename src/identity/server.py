@@ -4,10 +4,12 @@ from wsgiref import simple_server
 
 import falcon
 
+import clock
 import identity.config as config
 import identity.handlers as identity
 import identity.validation as validation
 import secrets
+import sqlalchemy
 
 
 # /users
@@ -20,13 +22,34 @@ app = falcon.API()
 
 secret_generator = secrets.SecretGenerator()
 
+name_validator = validation.NameValidator()
+auth_token_validator = validation.AuthTokenValidator()
 email_address_validator = validation.EmailAddressValidator()
 password_validator = validation.PasswordValidator(secret_generator)
+user_creation_data_validator = validation.UserCreationDataValidator(
+    name_validator=name_validator,
+    auth_token_validator=auth_token_validator,
+    email_address_validator=email_address_validator)
+the_clock = clock.Clock()
+secret_generator = secrets.SecretGenerator()
+sql_engine = sqlalchemy.create_engine(config.db_path, echo=True)
 
-app.add_route('/users', identity.UsersResource(
-    email_address_validator, password_validator))
-app.add_route('/users/check-email', identity.CheckEmailAddressResource(
-    email_address_validator))
+users_resource = identity.UsersResource(
+    name_validator=name_validator,
+    auth_token_validator=auth_token_validator,
+    email_address_validator=email_address_validator,
+    user_creation_data_validator=user_creation_data_validator,
+    password_validator=password_validator,
+    the_clock=the_clock,
+    secret_generator=secret_generator,
+    sql_engine=sql_engine)
+check_email_address_resource = identity.CheckEmailAddressResource(
+    email_address_validator=email_address_validator)
+
+identity.set_up_database(sql_engine)
+
+app.add_route('/users', users_resource)
+app.add_route('/users/check-email', check_email_address_resource)
 
 
 def main():

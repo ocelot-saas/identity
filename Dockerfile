@@ -14,6 +14,9 @@ RUN apt-get update -y && \
 
 RUN mkdir /ocelot
 RUN mkdir /ocelot/pack
+RUN mkdir /ocelot/var
+RUN mkdir /ocelot/var/db
+RUN mkdir /ocelot/var/db/identity
 
 COPY . /ocelot/pack/identity
 
