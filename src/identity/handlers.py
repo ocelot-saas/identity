@@ -61,8 +61,10 @@ class UsersResource(object):
     Handles creation, and 'retrieval' via auth token.
     """
 
-    def __init__(self, name_validator, email_address_validator, password_validator,
-                 user_creation_data_validator, the_clock, secret_generator, sql_engine):
+    def __init__(self, auth_token_validator, name_validator, email_address_validator,
+                 password_validator, user_creation_data_validator, the_clock,
+                 secret_generator, sql_engine):
+        self._auth_token_validator = auth_token_validator
         self._name_validator = name_validator
         self._email_address_validator = email_address_validator
         self._password_validator = password_validator
