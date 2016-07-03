@@ -3,15 +3,10 @@ language: python
 python:
 - "3.4"
 
-# The secure env variables are: GEMFURY_KEY
-env:
-  global:
-  - secure: "kolu/uxh5rL/NhKzdn/A14XsxJHh9cs90v5Ui7uWOaNslxkjSmR6AOvy8f2BxSJ82N1cvpp7XEsyn1j18YhpEsey7nslKGSDO+FWAzclgSHA05stVm/sX2OapijKb9wlgQqQOm0Kb4EgPtkBKv5G8QTepMudtnxnwtga8ovSodStDDjmrC+RIXdTwFje6TAodsEcTN6Us3jLDqjVz1tcX0IZrgVeshHCAF2Tmb7NlQa2hxMYv4BcbREvX3ztUJGUUDX7pASQok5wUMJoBo+CetfSbMBkh5KCiKMPOURFNgf5qLqp8RtlnmsBqUKUdpGcsF22CJy82xPcbEbd17DgcyKiEoewCWvLeEz2F+a6FFmnB5kei6BcF7KsvVc6Qjvg7VIr7e0gWXkn/XWzseF9hJVL2s339f7mrHhYGKXOYL2oHulMzdbQkfsUitBgakhaC018KXnHP+aGYok13uTkZUqs09Y+eJry5TqM0gREV7o4CWMpYku1BFNOZEn5dErP88yQNoArQgApvEhhknewf7lkrUghlySoqfhe5PfLvCtjhjqWzygpltcAbhP2IVI44l2kdbdGz9ufnOboVOBIAHB/dd7wdWgjfhvzy+tadS1+nrOhWXbZvvwETot8wqeugxrFFgTuhYFtGxuvWqG9+3hW+9dijM9OdGwIs629ReI="
-
 install:
 - pip install coveralls
 - pip install coverage
-- pip install -r requirements.txt --extra-index-url https://pypi.fury.io/$GEMFURY_KEY/ocelot-saas/
+- pip install -r requirements.txt
 
 script:
 - coverage run --source=identity --module unittest discover --verbose
