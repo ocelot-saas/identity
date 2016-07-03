@@ -3,7 +3,13 @@ FROM ubuntu:latest
 MAINTAINER Horia Coman <horia141@gmail.com>
 
 RUN apt-get update -y && \
-    apt-get install -y --no-install-recommends python python-pip && \
+    apt-get install -y --no-install-recommends \
+            python3 \
+            python3-pip \
+            python3-dev \
+            build-essential \
+            libssl-dev \
+            libffi-dev && \
     apt-get clean
 
 RUN mkdir /ocelot
@@ -11,7 +17,7 @@ RUN mkdir /ocelot/pack
 
 COPY . /ocelot/pack/identity
 
-RUN cd /ocelot/pack/identity && python setup.py install
+RUN cd /ocelot/pack/identity && pip3 install -r requirements.txt
 
 RUN gunicorn --check-config identity.server:app
 

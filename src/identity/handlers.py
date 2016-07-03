@@ -20,8 +20,16 @@ class UsersResource(object):
         GET with an email and password retrieves the respective user.
         """
 
-        resp.status = falcon.HTTP_200
-        resp.body = 'Hello falcon'
+        get_type = req.get_param('t', required=True)
+
+        if get_type == 'a':
+            self._on_get_auth_token(req, resp)
+        elif get_type == 'ep':
+            self._on_get_email_address_and_pass(req, resp)
+        else:
+            raise falcon.HTTPBadRequest(
+                title='Bad GET type param',
+                description='Invalid value "{}" for type param'.format(get_type))
 
     def on_post(self, req, resp):
         """POST creates a user, with a given email and password."""
@@ -29,10 +37,12 @@ class UsersResource(object):
         resp.body = 'Hello falcon'
 
     def _on_get_auth_token(self, req, resp):
-        pass
+        resp.status = falcon.HTTP_200
+        resp.body = 'Hello falcon'
 
     def _on_get_email_address_and_pass(self, req, resp):
-        pass
+        resp.status = falcon.HTTP_200
+        resp.body = 'Hello falcon'
 
 
 class CheckEmailAddressResource(object):
