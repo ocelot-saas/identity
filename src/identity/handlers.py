@@ -6,9 +6,11 @@ import json
 import falcon
 
 import identity.validation as validation
+import identity.schemas as schemas
 import pytz
 import secrets
 import sqlalchemy as sql
+import jsonschema
 
 
 _metadata = sql.MetaData()
@@ -150,6 +152,8 @@ class UsersResource(object):
             }
         }
 
+        jsonschema.validate(response, schemas.USERS_RESPONSE)
+
         resp.status = falcon.HTTP_201
         resp.body = json.dumps(response)
 
@@ -194,6 +198,8 @@ class UsersResource(object):
                 'expiryTimeTs': auth_token_row['expiry_time'].timestamp()
             }
         }
+
+        jsonschema.validate(response, schemas.USERS_RESPONSE)
 
         resp.status = falcon.HTTP_200
         resp.body = json.dumps(response)
@@ -247,6 +253,8 @@ class UsersResource(object):
             }
         }
 
+        jsonschema.validate(response, schemas.USERS_RESPONSE)
+
         resp.status = falcon.HTTP_200
         resp.body = json.dumps(response)
 
@@ -288,6 +296,8 @@ class CheckEmailAddressResource(object):
         response = {
             "inUse": basic_access_info_row is not None
         }
+
+        jsonschema.validate(response, schemas.CHECK_EMAIL_ADDRESS_RESPONSE)
 
         resp.status = falcon.HTTP_200
         resp.body = json.dumps(response)
