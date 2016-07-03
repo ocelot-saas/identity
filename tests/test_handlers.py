@@ -1,4 +1,5 @@
 import unittest
+from mockito import mock
 
 import falcon.testing
 
@@ -8,7 +9,11 @@ import identity.handlers as identity
 class UsersResourceTestCase(falcon.testing.TestCase):
     def setUp(self):
         super(UsersResourceTestCase, self).setUp()
-        self.api.add_route('/users', identity.UsersResource())
+
+        email_address_validator = mock()
+        password_validator = mock()
+        self.api.add_route('/users', identity.UsersResource(
+            email_address_validator, password_validator))
 
     def test_get(self):
         """GET /users works."""
@@ -21,8 +26,11 @@ class UsersResourceTestCase(falcon.testing.TestCase):
 
 class CheckEmailAddressResourceTestCase(falcon.testing.TestCase):
     def setUp(self):
-        super(UsersResourceTestCase, self).setUp()
-        self.api.add_route('/users/check-email', identity.CheckEmailAddressResouce())
+        super(CheckEmailAddressResourceTestCase, self).setUp()
+
+        email_address_validator = mock()
+        self.api.add_route('/users/check-email', identity.CheckEmailAddressResource(
+            email_address_validator))
 
     def test_get(self):
         """GET /users/check-email works."""

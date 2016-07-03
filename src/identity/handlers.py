@@ -9,8 +9,9 @@ class UsersResource(object):
     Handles creation, and 'retrieval' via auth token.
     """
 
-    def __init__(self, identity_validator):
-        self._identity_validator = identity_validator
+    def __init__(self, email_address_validator, password_validator):
+        self._email_address_validator = email_address_validator
+        self._password_validator = password_validator
 
     def on_get(self, req, resp):
         """GET a particular user.
@@ -36,6 +37,9 @@ class UsersResource(object):
 
 class CheckEmailAddressResource(object):
     """An RPC style resource for checking whether an email is in use or not."""
+
+    def __init__(self, email_address_validator):
+        self._email_address_validator = email_address_validator
 
     def on_get(self, req, resp):
         """GET checks to see if a particular email is in use."""

@@ -6,9 +6,9 @@ import falcon
 
 import identity.config as config
 import identity.handlers as identity
+import identity.validation as validation
+import secrets
 
-
-app = falcon.API()
 
 # /users
 #   GET with a given auth token retrieves the respective user
@@ -16,8 +16,17 @@ app = falcon.API()
 #   POST creates a user, with an email&password
 # /users/check-email
 #   GET with a given email checks if a user can be created with it
-app.add_route('/users', identity.UsersResource())
-app.add_route('/users/check-email', identity.CheckEmailAddressResource())
+app = falcon.API()
+
+secret_generator = secrets.SecretGenerator()
+
+email_address_validator = validation.EmailAddressValidator()
+password_validator = validation.PasswordValidator(secret_generator)
+
+app.add_route('/users', identity.UsersResource(
+    email_address_validator, password_validator))
+app.add_route('/users/check-email', identity.CheckEmailAddressResource(
+    email_address_validator))
 
 
 def main():
