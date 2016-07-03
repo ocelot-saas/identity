@@ -30,11 +30,11 @@ class UsersResource(object):
     def _on_get_auth_token(self, req, resp):
         pass
 
-    def _on_get_email_and_pass(self, req, resp):
+    def _on_get_email_address_and_pass(self, req, resp):
         pass
 
 
-class CheckMailResouce(object):
+class CheckEmailAddressResource(object):
     """An RPC style resource for checking whether an email is in use or not."""
 
     def on_get(self, req, resp):

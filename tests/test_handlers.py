@@ -5,15 +5,29 @@ import falcon.testing
 import identity.handlers as identity
 
 
-class IdentityResourceTest(falcon.testing.TestCase):
+class UsersResourceTestCase(falcon.testing.TestCase):
     def setUp(self):
-        super(IdentityResourceTest, self).setUp()
-        self.api.add_route('/hello', identity.IdentityResource())
+        super(UsersResourceTestCase, self).setUp()
+        self.api.add_route('/users', identity.UsersResource())
 
     def test_get(self):
-        """GET /hello works."""
+        """GET /users works."""
 
-        res = self.simulate_get('/hello')
+        res = self.simulate_get('/users')
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.text, 'Hello falcon')
+
+
+class CheckEmailAddressResourceTestCase(falcon.testing.TestCase):
+    def setUp(self):
+        super(UsersResourceTestCase, self).setUp()
+        self.api.add_route('/users/check-email', identity.CheckEmailAddressResouce())
+
+    def test_get(self):
+        """GET /users/check-email works."""
+
+        res = self.simulate_get('/users/check-email')
 
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.text, 'Hello falcon')

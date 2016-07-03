@@ -17,7 +17,7 @@ app = falcon.API()
 # /users/check-email
 #   GET with a given email checks if a user can be created with it
 app.add_route('/users', identity.UsersResource())
-app.add_route('/users/check-mail', identity.CheckMailResouce())
+app.add_route('/users/check-email', identity.CheckEmailAddressResource())
 
 
 def main():
