@@ -186,10 +186,16 @@ class UsersResource(object):
             result.close()
 
             if auth_token_row is None:
-                raise falcon.HTTPUnauthorized()
+                raise falcon.HTTPUnauthorized(
+                    title='Cannot find auth token',
+                    description='Cannot find auth token',
+                    challenges='Cannot find auth token')
 
             if auth_token_row['expiry_time'].replace(tzinfo=pytz.utc) < right_now:
-                raise falcon.HTTPUnauthorized()
+                raise falcon.HTTPUnauthorized(
+                    title='Cannot find auth token',
+                    description='Cannot find auth token',
+                    challenges='Cannot find auth token')
 
             # Fetch full user information.
             user_row = _fetch_user(conn, auth_token_row['user_id'])
@@ -235,11 +241,17 @@ class UsersResource(object):
             basic_access_info_row = _fetch_basic_info(conn, email_address)
 
             if basic_access_info_row is None:
-                raise falcon.HTTPUnauthorized()
+                raise falcon.HTTPUnauthorized(
+                    title='Cannot find email address or password is invalid',
+                    description='Cannot find email address or password is invalid',
+                    challenges='Cannot find email address or password is invalid')
 
             if not self._secret_generator.check_password(
                     password, basic_access_info_row['hidden_password']):
-                raise falcon.HTTPUnauthorized()
+                raise falcon.HTTPUnauthorized(
+                    title='Cannot find email address or password is invalid',
+                    description='Cannot find email address or password is invalid',
+                    challenges='Cannot find email address or password is invalid')
 
             # Fetch full user information.
             user_row = _fetch_user(conn, basic_access_info_row['user_id'])
