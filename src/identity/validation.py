@@ -9,7 +9,12 @@ import jsonschema
 
 class Error(Exception):
     """Error raised by validation methods."""
-    pass
+
+    def __init__(self, reason):
+        self._reason = reason
+
+    def __str__(self):
+        return 'Validation error! Reason:\n {}'.format(str(self._reason))
 
 
 class UserCreationDataValidator(object):
@@ -23,13 +28,13 @@ class UserCreationDataValidator(object):
     def validate(self, user_creation_data):
         try:
             jsonschema.validate(user_creation_data, schemas.USER_CREATION_DATA)
-        except jsonschema.ValidationError:
-            raise Error()
+        except jsonschema.ValidationError as e:
+            raise Error(e)
         
         user_creation_data['name'] = \
             self._name_validator.validate(user_creation_data['name'])
-        user_creation_data['email_address'] = \
-            self._email_address_validator.validate(user_creation_data['email_address'])
+        user_creation_data['emailAddress'] = \
+            self._email_address_validator.validate(user_creation_data['emailAddress'])
         user_creation_data['password'] = \
             self._password_validator.validate(user_creation_data['password'])
 
@@ -44,7 +49,7 @@ class NameValidator(object):
         name = name.strip()
         
         if name == u'':
-            raise Error()
+            raise Error('Empty name')
 
         return name
 
@@ -57,7 +62,7 @@ class AuthTokenValidator(object):
         auth_token = auth_token.strip()
 
         if len(auth_token) != secrets.USER_SECRET_SIZE:
-            raise Error()
+            raise Error('Invalid length for auth token')
 
         return auth_token
 
@@ -70,7 +75,7 @@ class EmailAddressValidator(object):
         email_address = email_address.strip()
 
         if not validate_email.validate_email(email_address):
-            raise Error()
+            raise Error('Invalid email address')
 
         return email_address
 
@@ -85,9 +90,9 @@ class PasswordValidator(object):
         """Validate a password."""
 
         if password == '':
-            raise Error()
+            raise Error('Empty password')
 
         if not self._secret_generator.is_password_allowed(password):
-            raise Error()
+            raise Error('Invalid length for password')
 
         return password

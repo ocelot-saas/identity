@@ -94,16 +94,21 @@ class UsersResource(object):
     def on_post(self, req, resp):
         """POST creates a user, with a given email and password."""
         try:
-            user_creation_data = json.load(req.stream)
+            user_creation_data = json.loads(req.stream.read().decode('utf-8'))
+        except ValueError as e:
+            raise falcon.HTTPBadRequest(
+                title='Bad user creation data',
+                description='Could not parse user creation data')
+        try:
             user_creation_data = self._user_creation_data_validator.validate(user_creation_data)
 
             name = user_creation_data['name']
-            email_address = user_creation_data['email_address']
+            email_address = user_creation_data['emailAddress']
             password = user_creation_data['password']
-        except (validation.Error, ValueError):
+        except validation.Error:
             raise falcon.HTTPBadRequest(
                 title='Bad user creation data',
-                description='Invalid value "{}" for user creation data'.format(user_creation_data))
+                description='Invalid value "{}" for user creation data'.format(json.dumps(user_creation_data)))
 
         # This is going to be the time we always use when a creation date is required.
         right_now = self._clock.now()
@@ -146,11 +151,11 @@ class UsersResource(object):
             'user': {
                 'externalId': user_external_id,
                 'name': user_creation_data['name'],
-                'timeJoinedTs': right_now.timestamp()
+                'timeJoinedTs': int(right_now.timestamp())
             },
             'authToken': {
                 'token': auth_token_row['token'],
-                'expiryTimeTs': auth_token_row['expiry_time'].timestamp()
+                'expiryTimeTs': int(auth_token_row['expiry_time'].timestamp())
             }
         }
 
@@ -174,7 +179,7 @@ class UsersResource(object):
             # Figure out whether there is an auth token.
             fetch_auth_token = sql.sql \
                 .select([_auth_tokens]) \
-                .where(_auth_tokens.c.token == auth_token.token)
+                .where(_auth_tokens.c.token == auth_token)
 
             result = conn.execute(fetch_auth_token)
             auth_token_row = result.fetchone()
@@ -193,11 +198,11 @@ class UsersResource(object):
             'user': {
                 'externalId': user_row['external_id'],
                 'name': user_row['name'],
-                'timeJoinedTs': user_row['time_joined'].timestamp()
+                'timeJoinedTs': int(user_row['time_joined'].timestamp())
             },
             'authToken': {
                 'token': auth_token_row['token'],
-                'expiryTimeTs': auth_token_row['expiry_time'].timestamp()
+                'expiryTimeTs': int(auth_token_row['expiry_time'].timestamp())
             }
         }
 
@@ -247,11 +252,11 @@ class UsersResource(object):
             'user': {
                 'externalId': user_row['external_id'],
                 'name': user_row['name'],
-                'timeJoinedTs': user_row['time_joined'].timestamp()
+                'timeJoinedTs': int(user_row['time_joined'].timestamp())
             },
             'authToken': {
                 'token': auth_token_row['token'],
-                'expiryTimeTs': auth_token_row['expiry_time'].timestamp()
+                'expiryTimeTs': int(auth_token_row['expiry_time'].timestamp())
             }
         }
 
@@ -293,7 +298,7 @@ class CheckEmailAddressResource(object):
                 description='Invalid value "{}" for email address param'.format(email_address))
 
         with self._sql_engine.begin() as conn:
-            basic_access_info_row = self._fetch_basic_info(conn, email_address)
+            basic_access_info_row = _fetch_basic_info(conn, email_address)
 
         response = {
             "inUse": basic_access_info_row is not None
@@ -308,7 +313,7 @@ class CheckEmailAddressResource(object):
 def _fetch_basic_info(conn, email_address):
     fetch_by_email = sql.sql \
                         .select([_basic_access_info]) \
-                        .where(_basic_access_info.c.email == email_address)
+                        .where(_basic_access_info.c.email_address == email_address)
 
     result = conn.execute(fetch_by_email)
     basic_access_info_row = result.fetchone()
@@ -317,7 +322,7 @@ def _fetch_basic_info(conn, email_address):
     return basic_access_info_row
 
 
-def _fetch_user(self, conn, user_id):
+def _fetch_user(conn, user_id):
     fetch_by_user_id = sql.sql \
                           .select([_users]) \
                           .where(_users.c.id == user_id)

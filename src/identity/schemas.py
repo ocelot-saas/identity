@@ -10,7 +10,7 @@ USER_CREATION_DATA = {
             'description': 'The user\'s human name',
             'type': 'string'
         },
-        'email_address': {
+        'emailAddress': {
             'description': 'The user\'s unique email address',
             'type': 'string'
         },
@@ -19,7 +19,7 @@ USER_CREATION_DATA = {
             'type': 'string'
         }
     },
-    'required': ['name', 'email_address', 'password'],
+    'required': ['name', 'emailAddress', 'password'],
 }
 
 USER = {
@@ -38,7 +38,7 @@ USER = {
         },
         'timeJoinedTs': {
             'description': 'The time the user joined, in UTC',
-            'type': 'int'
+            'type': 'integer'
         }
     },
     'required': ['externalId', 'name', 'timeJoinedTs']
@@ -56,7 +56,7 @@ AUTH_TOKEN = {
         },
         'expiryTimeTs': {
             'description': 'The time the token expires, in UTC',
-            'type': 'int'
+            'type': 'integer'
         }
     },
     'required': ['token', 'expiryTimeTs']
@@ -82,7 +82,7 @@ CHECK_EMAIL_ADDRESS_RESPONSE = {
     'properties': {
         'inUse': {
             'description': 'Whether the email address is in use or not',
-            'type': 'bool'
+            'type': 'boolean'
         }
     },
     'required': ['inUse']
