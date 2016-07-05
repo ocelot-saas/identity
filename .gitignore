@@ -16,3 +16,4 @@
 
 # Output of coverage tools.
 /coverage/
+.coverage
