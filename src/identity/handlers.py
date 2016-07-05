@@ -16,8 +16,8 @@ import jsonschema
 _metadata = sql.MetaData()
 
 
-_users = sql.Table(
-    'Users', _metadata,
+_user = sql.Table(
+    'identity.Users', _metadata,
     sql.Column('id', sql.Integer, primary_key=True),
     sql.Column('external_id', sql.String(secrets.USER_SECRET_SIZE), index=True),
     sql.Column('status', sql.Enum('ACTIVE', 'INACTIVE')),
@@ -27,24 +27,24 @@ _users = sql.Table(
 
 
 _basic_access_info = sql.Table(
-    'BasicAccessInfo', _metadata,
+    'identity.BasicAccessInfo', _metadata,
     sql.Column('user_id', sql.Integer, primary_key=True),
     sql.Column('email_address', sql.String, index=True),
     sql.Column('hidden_password', sql.String(secrets.HIDDEN_PASSWORD_SIZE)))
 
 
 _facebook_access_info = sql.Table(
-    'FacebookAccessInfo', _metadata,
+    'identity.FacebookAccessInfo', _metadata,
     sql.Column('user_id', sql.Integer, primary_key=True),
     sql.Column('access_token', sql.String),
     sql.Column('expiry_time', sql.DateTime(timezone=pytz.utc)))
 
 
-_auth_tokens = sql.Table(
-    'AuthTokens', _metadata,
+_auth_token = sql.Table(
+    'identity.AuthTokens', _metadata,
     sql.Column('token', sql.String, primary_key=True),
     sql.Column('expiry_time', sql.DateTime(timezone=pytz.utc)),
-    sql.Column('user_id', sql.ForeignKey(_users.c.id)))
+    sql.Column('user_id', sql.ForeignKey(_user.c.id)))
 
 
 AUTH_TOKEN_LIFETIME_DURATION = datetime.timedelta(milliseconds=2592000000)
@@ -118,16 +118,16 @@ class UsersResource(object):
                     description='Email address "{}" is already in use'.format(email_address))
 
             # Create an entry for the person in the Users table.
-            create_user = _users \
+            create_user = _user \
                 .insert() \
                 .values(status='ACTIVE', name=name, time_joined=right_now)
             result = conn.execute(create_user)
             user_id = result.inserted_primary_key[0]
             result.close()
             user_external_id = self._secret_generator.gen_user_secret(user_id)
-            complete_user_with_external_id = _users \
+            complete_user_with_external_id = _user \
                 .update() \
-                .where(_users.c.id == user_id) \
+                .where(_user.c.id == user_id) \
                 .values(external_id=user_external_id)
             conn.execute(complete_user_with_external_id).close()
 
@@ -173,8 +173,8 @@ class UsersResource(object):
         with self._sql_engine.begin() as conn:
             # Figure out whether there is an auth token.
             fetch_auth_token = sql.sql \
-                .select([_auth_tokens]) \
-                .where(_auth_tokens.c.token == auth_token)
+                .select([_auth_token]) \
+                .where(_auth_token.c.token == auth_token)
 
             result = conn.execute(fetch_auth_token)
             auth_token_row = result.fetchone()
@@ -276,7 +276,7 @@ class UsersResource(object):
         token = self._secret_generator.gen_user_secret(user_id)
         expiry_time = right_now + AUTH_TOKEN_LIFETIME_DURATION
         create_auth_token = \
-            _auth_tokens \
+            _auth_token \
             .insert() \
             .values(token=token, expiry_time=expiry_time, user_id=user_id)
         conn.execute(create_auth_token).close()
@@ -331,8 +331,8 @@ def _fetch_basic_info(conn, email_address):
 
 def _fetch_user(conn, user_id):
     fetch_by_user_id = sql.sql \
-                          .select([_users]) \
-                          .where(_users.c.id == user_id)
+                          .select([_user]) \
+                          .where(_user.c.id == user_id)
 
     result = conn.execute(fetch_by_user_id)
     user_row = result.fetchone()
