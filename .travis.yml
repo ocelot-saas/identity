@@ -11,7 +11,8 @@ install:
 script:
 - coverage run --source=identity --module unittest discover --verbose
 
-after_success: coveralls
+after_success:
+- coveralls
 
 deploy:
   - provider: script

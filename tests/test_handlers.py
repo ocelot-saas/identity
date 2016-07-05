@@ -11,6 +11,7 @@ class UsersResourceTestCase(falcon.testing.TestCase):
         super(UsersResourceTestCase, self).setUp()
 
         auth_token_validator = mock()
+        name_validator = mock()
         email_address_validator = mock()
         password_validator = mock()
         user_creation_data_validator = mock()
@@ -21,8 +22,8 @@ class UsersResourceTestCase(falcon.testing.TestCase):
             auth_token_validator=auth_token_validator,
             name_validator=name_validator,
             email_address_validator=email_address_validator,
-            user_creation_data_validator=user_creation_data_validator,
             password_validator=password_validator,
+            user_creation_data_validator=user_creation_data_validator,
             the_clock=the_clock,
             secret_generator=secret_generator,
             sql_engine=sql_engine)
