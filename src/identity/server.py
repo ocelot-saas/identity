@@ -47,8 +47,6 @@ check_email_address_resource = identity.CheckEmailAddressResource(
     email_address_validator=email_address_validator,
     sql_engine=sql_engine)
 
-identity.set_up_database(sql_engine)
-
 app.add_route('/users', users_resource)
 app.add_route('/users/check-email', check_email_address_resource)
 

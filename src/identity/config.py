@@ -8,4 +8,5 @@ bind = '{}:{}'.format(address, port)
 workers = multiprocessing.cpu_count() * 2 + 1
 accesslog = '-'
 errorlog = '-'
+migrations_path = '/ocelot/pack/identity/migrations'
 db_path = 'sqlite:////ocelot/var/db/identity/db'

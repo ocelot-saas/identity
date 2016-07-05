@@ -50,11 +50,6 @@ _auth_tokens = sql.Table(
 AUTH_TOKEN_LIFETIME_DURATION = datetime.timedelta(milliseconds=2592000000)
 
 
-def set_up_database(sql_engine):
-    """Set up database tables for the identity service."""
-    _metadata.create_all(sql_engine)
-
-
 class UsersResource(object):
     """A collection of users.
 

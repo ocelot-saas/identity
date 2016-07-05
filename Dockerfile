@@ -23,7 +23,7 @@ COPY . /ocelot/pack/identity
 RUN pip3 install setuptools
 RUN cd /ocelot/pack/identity && pip3 install -r requirements.txt
 RUN cd /ocelot/pack/identity && python3 setup.py develop
-
+RUN /ocelot/pack/identity/bin/migrate.sh
 RUN gunicorn --check-config identity.server:app
 
 RUN groupadd ocelot && \

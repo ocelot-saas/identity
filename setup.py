@@ -36,6 +36,7 @@ setup(
         'secrets>=0,<1',
         'sqlalchemy>=1,<2',
         'validate_email>=1,<2',
+        'yoyo-migrations>=5,<6'
         ],
     test_suite='tests',
     tests_require=[],

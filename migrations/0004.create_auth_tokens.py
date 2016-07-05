@@ -3,7 +3,7 @@
 from yoyo import step
 
 
-__depends__ = ['0001.create_users']
+__depends__ = ['0003.create_facebook_access_info']
 
 
 step("""
