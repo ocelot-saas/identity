@@ -1,12 +1,14 @@
 import multiprocessing
 import os
 
+# Application config.
+ADDRESS = '0.0.0.0'
+PORT = int(os.environ.get('PORT', '10000'))
+MIGRATIONS_PATH = '/ocelot/pack/identity/migrations'
+DATABASE_URL = os.environ.get('DATABASE_URL', 'sqlite:////ocelot/var/db/identity/db')
 
-address = '0.0.0.0'
-port = int(os.environ.get('PORT', '10000'))
-bind = '{}:{}'.format(address, port)
+# WSGI config. Not exported, technically.
+bind = '{}:{}'.format(ADDRESS, PORT)
 workers = multiprocessing.cpu_count() * 2 + 1
 accesslog = '-'
 errorlog = '-'
-migrations_path = '/ocelot/pack/identity/migrations'
-db_path = 'sqlite:////ocelot/var/db/identity/db'

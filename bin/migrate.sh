@@ -6,8 +6,8 @@ import identity.config as config
 
 def main():
     """Migrations script entry point."""
-    backend = get_backend(config.db_path)
-    migrations = read_migrations(config.migrations_path)
+    migrations = read_migrations(config.MIGRATIONS_PATH)
+    backend = get_backend(config.DATABASE_URL)
     backend.apply_migrations(backend.to_apply(migrations))
 
 

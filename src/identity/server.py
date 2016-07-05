@@ -32,7 +32,7 @@ user_creation_data_validator = validation.UserCreationDataValidator(
     password_validator=password_validator)
 the_clock = clock.Clock()
 secret_generator = secrets.SecretGenerator()
-sql_engine = sqlalchemy.create_engine(config.db_path, echo=True)
+sql_engine = sqlalchemy.create_engine(config.DATABASE_URL, echo=True)
 
 users_resource = identity.UsersResource(
     auth_token_validator=auth_token_validator,
@@ -53,7 +53,7 @@ app.add_route('/users/check-email', check_email_address_resource)
 
 def main():
     """Server entry point."""
-    httpd = simple_server.make_server(config.address, config.port, app)
+    httpd = simple_server.make_server(config.ADDRESS, config.PORT, app)
     httpd.serve_forever()
 
 if __name__ == '__main__':
