@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python
 
 from yoyo import read_migrations, get_backend
 import identity.config as config
