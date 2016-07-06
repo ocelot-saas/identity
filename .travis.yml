@@ -3,6 +3,11 @@ language: python
 python:
 - "3.4"
 
+addons:
+  apt:
+    packages:
+    - libpq-dev
+
 install:
 - pip install coveralls
 - pip install coverage
