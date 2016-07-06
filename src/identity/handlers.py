@@ -13,35 +13,35 @@ import sqlalchemy as sql
 import jsonschema
 
 
-_metadata = sql.MetaData()
+_metadata = sql.MetaData(schema='identity')
 
 
 _user = sql.Table(
-    'identity.Users', _metadata,
+    'user', _metadata,
     sql.Column('id', sql.Integer, primary_key=True),
     sql.Column('external_id', sql.String(secrets.USER_SECRET_SIZE), index=True),
-    sql.Column('status', sql.Enum('ACTIVE', 'INACTIVE')),
+    sql.Column('status', sql.Enum('ADDED', 'ACTIVE', 'INACTIVE')),
     sql.Column('name', sql.String),
     sql.Column('time_joined', sql.DateTime(timezone=True)),
     sql.Column('time_left', sql.DateTime(timezone=True), nullable=True))
 
 
 _basic_access_info = sql.Table(
-    'identity.BasicAccessInfo', _metadata,
+    'basic_access_info', _metadata,
     sql.Column('user_id', sql.Integer, primary_key=True),
     sql.Column('email_address', sql.String, index=True),
     sql.Column('hidden_password', sql.String(secrets.HIDDEN_PASSWORD_SIZE)))
 
 
 _facebook_access_info = sql.Table(
-    'identity.FacebookAccessInfo', _metadata,
+    'facebook_access_info', _metadata,
     sql.Column('user_id', sql.Integer, primary_key=True),
     sql.Column('access_token', sql.String),
     sql.Column('expiry_time', sql.DateTime(timezone=pytz.utc)))
 
 
 _auth_token = sql.Table(
-    'identity.AuthTokens', _metadata,
+    'auth_token', _metadata,
     sql.Column('token', sql.String, primary_key=True),
     sql.Column('expiry_time', sql.DateTime(timezone=pytz.utc)),
     sql.Column('user_id', sql.ForeignKey(_user.c.id)))
@@ -120,7 +120,7 @@ class UsersResource(object):
             # Create an entry for the person in the Users table.
             create_user = _user \
                 .insert() \
-                .values(status='ACTIVE', name=name, time_joined=right_now)
+                .values(status='ADDED', name=name, time_joined=right_now)
             result = conn.execute(create_user)
             user_id = result.inserted_primary_key[0]
             result.close()
@@ -128,7 +128,9 @@ class UsersResource(object):
             complete_user_with_external_id = _user \
                 .update() \
                 .where(_user.c.id == user_id) \
-                .values(external_id=user_external_id)
+                .values(
+                    status='ACTIVE',
+                    external_id=user_external_id)
             conn.execute(complete_user_with_external_id).close()
 
             #  Create an entry for the person in the basic access info table.

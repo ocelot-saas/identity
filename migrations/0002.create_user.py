@@ -4,19 +4,18 @@ import secrets
 from yoyo import step
 
 
-__depends__ = ['0001.create_schema.py']
-
+__depends__ = ['0001.create_schema']
 
 step("""
-CREATE TABLE identity.User (
+CREATE TABLE identity.user (
     id SERIAL,
-    external_id VARCHAR({external_id_size}) NOT NULL,
-    status VARCHAR(8) NOT NULL,
+    external_id CHAR({external_id_size}),
+    status CHAR(8) NOT NULL,
     name VARCHAR NOT NULL,
-    time_joined DATETIME NOT NULL,
-    time_left DATETIME,
+    time_joined TIMESTAMP NOT NULL,
+    time_left TIMESTAMP,
     PRIMARY KEY (id),
-    CHECK (status IN ('ACTIVE', 'INACTIVE')),
+    CHECK (status IN ('ADDED', 'ACTIVE', 'INACTIVE'))
 )
 """.format(external_id_size=secrets.USER_SECRET_SIZE), """
 DROP TABLE identity.User

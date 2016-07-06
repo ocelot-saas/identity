@@ -32,6 +32,7 @@ setup(
         'falcon>=1,<2',
         'gunicorn>=19,<20',
         'jsonschema>=2,<3',
+        'psycopg2>=2,<3',
         'pytz==2015.7',
         'secrets>=0,<1',
         'sqlalchemy>=1,<2',

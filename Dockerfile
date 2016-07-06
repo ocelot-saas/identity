@@ -8,8 +8,9 @@ RUN apt-get update -y && \
             python3-pip \
             python3-dev \
             build-essential \
-            libssl-dev \
-            libffi-dev && \
+            libffi-dev \
+	    libpq-dev \
+            libssl-dev && \
     apt-get clean
 
 RUN mkdir /ocelot
@@ -23,12 +24,12 @@ COPY . /ocelot/pack/identity
 RUN pip3 install setuptools
 RUN cd /ocelot/pack/identity && pip3 install -r requirements.txt
 RUN cd /ocelot/pack/identity && python3 setup.py develop
-RUN /ocelot/pack/identity/bin/migrate.sh
-RUN gunicorn --check-config identity.server:app
 
 RUN groupadd ocelot && \
     useradd -ms /bin/bash -g ocelot ocelot
 RUN chown -R ocelot:ocelot /ocelot
+
+ENV ENVIRON LOCAL
 
 WORKDIR /ocelot
 EXPOSE 10000
