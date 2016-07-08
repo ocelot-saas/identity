@@ -30,7 +30,6 @@ RUN mkdir /ocelot/var/db/identity
 
 RUN groupadd ocelot && \
     useradd -ms /bin/bash -g ocelot ocelot
-RUN chown -R ocelot:ocelot /ocelot
 
 # Install package requirements.
 
@@ -44,7 +43,9 @@ COPY . /ocelot/pack/identity
 # Setup the runtime environment for the application.
 
 ENV ENVIRON LOCAL
-VOLUME ["/ocelot/pack/identity"]
+
+RUN chown -R ocelot:ocelot /ocelot
+VOLUME ["/ocelot/pack/identity/src"]
 WORKDIR /ocelot/pack/identity/src
 EXPOSE 10000
 USER ocelot
