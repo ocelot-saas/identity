@@ -16,7 +16,7 @@ def readme():
 
 setup(
     name='identity',
-    version='0.0.21',
+    version='0.0.23',
     description='The identity service for Ocelot, as a Python package.',
     long_description=readme(),
     keywords='ocelot identity service rest api',
@@ -28,7 +28,7 @@ setup(
     package_dir={'': 'src'},
     py_modules=[splitext(basename(path))[0] for path in glob('src/*.py')],
     install_requires=[
-        # Duplicated from requirements.txt
+        # Duplicated from requirements.txt.
         'clock==0.0.3',
         'falcon>=1,<2',
         'gunicorn>=19,<20',

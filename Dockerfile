@@ -2,7 +2,7 @@ FROM ubuntu:latest
 
 MAINTAINER Horia Coman <horia141@gmail.com>
 
-# Install global packages
+# Install global packages.
 
 RUN apt-get update -y && \
     apt-get install -y --no-install-recommends \
@@ -17,7 +17,7 @@ RUN apt-get update -y && \
 
 RUN pip3 install setuptools
 
-# Setup directory structure
+# Setup directory structure.
 
 RUN mkdir /ocelot
 RUN mkdir /ocelot/pack
