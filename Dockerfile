@@ -2,6 +2,8 @@ FROM ubuntu:latest
 
 MAINTAINER Horia Coman <horia141@gmail.com>
 
+# Install global packages
+
 RUN apt-get update -y && \
     apt-get install -y --no-install-recommends \
             python3 \
@@ -13,25 +15,37 @@ RUN apt-get update -y && \
             libssl-dev && \
     apt-get clean
 
+RUN pip3 install setuptools
+
+# Setup directory structure
+
 RUN mkdir /ocelot
 RUN mkdir /ocelot/pack
+RUN mkdir /ocelot/pack/identity
 RUN mkdir /ocelot/var
 RUN mkdir /ocelot/var/db
 RUN mkdir /ocelot/var/db/identity
 
-COPY . /ocelot/pack/identity
-
-RUN pip3 install setuptools
-RUN cd /ocelot/pack/identity && pip3 install -r requirements.txt
-RUN cd /ocelot/pack/identity && python3 setup.py develop
+# Setup users and groups.
 
 RUN groupadd ocelot && \
     useradd -ms /bin/bash -g ocelot ocelot
 RUN chown -R ocelot:ocelot /ocelot
 
-ENV ENVIRON LOCAL
+# Install package requirements.
 
-WORKDIR /ocelot
+COPY requirements.txt /ocelot/pack/identity/requirements.txt
+RUN cd /ocelot/pack/identity && pip3 install -r requirements.txt
+
+# Copy source code.
+
+COPY . /ocelot/pack/identity
+
+# Setup the runtime environment for the application.
+
+ENV ENVIRON LOCAL
+VOLUME ["/ocelot/pack/identity"]
+WORKDIR /ocelot/pack/identity/src
 EXPOSE 10000
 USER ocelot
-ENTRYPOINT ["gunicorn", "--config", "pack/identity/src/identity/config.py", "identity.server:app"]
+ENTRYPOINT ["gunicorn", "--config", "identity/config.py", "identity.server:app"]
