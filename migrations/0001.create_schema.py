@@ -4,7 +4,7 @@ from yoyo import step
 
 
 step("""
-CREATE SCHEMA identity
+CREATE SCHEMA identity;
 """, """
-DROP SCHEMA identity
+DROP SCHEMA IF EXISTS identity;
 """)
