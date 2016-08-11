@@ -52,6 +52,7 @@ DATABASE_URL = by_environ(
     local=local_postgres_uri,
     staging=lambda: os.environ['DATABASE_URL'],
     live=lambda: os.environ['DATABASE_URL'])
+AUTH0_DOMAIN=os.environ['AUTH0_DOMAIN']
 
 # WSGI config. Not exported, technically.
 bind = '{}:{}'.format(ADDRESS, PORT)

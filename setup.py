@@ -29,15 +29,14 @@ setup(
     py_modules=[splitext(basename(path))[0] for path in glob('src/*.py')],
     install_requires=[
         # Duplicated from requirements.txt.
+        'auth0-python>=2,<3',
         'clock==0.0.3',
         'falcon>=1,<2',
         'gunicorn>=19,<20',
         'jsonschema>=2,<3',
         'psycopg2>=2,<3',
         'pytz==2016.4',
-        'secrets>=0,<1',
         'sqlalchemy>=1,<2',
-        'validate_email>=1,<2',
         'yoyo-migrations>=5,<6'
         ],
     test_suite='tests',

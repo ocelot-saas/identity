@@ -1,25 +1,26 @@
 """Schema for the identity APIs objects."""
 
-USER_CREATION_DATA = {
+AUTH0_USER_RESPONSE = {
     '$schema': 'http://json-schema.org/draft-04/schema#',
-    'title': 'User creation data',
-    'description': 'A small set of data required to create a user, such as email, password etc.',
+    'title': 'Auth0 user response',
+    'description': 'JSON returned by Auth0 to describe a particular user',
     'type': 'object',
     'properties': {
+        'user_id': {
+            'description': 'The unique id assigned by Auth0 for this user',
+            'type': 'string',
+        },
         'name': {
-            'description': 'The user\'s human name',
-            'type': 'string'
+            'description': 'The name of the user, as best extracted by Auth0',
+            'type': 'string',
         },
-        'emailAddress': {
-            'description': 'The user\'s unique email address',
-            'type': 'string'
-        },
-        'password': {
-            'description': 'The password',
-            'type': 'string'
+        'picture': {
+            'description': 'An URL with a picture for the user',
+            'type': 'string',
         }
     },
-    'required': ['name', 'emailAddress', 'password'],
+    'required': ['user_id', 'name', 'picture'],
+    'additionalProperties': True
 }
 
 USER = {
@@ -28,62 +29,35 @@ USER = {
     'description': 'Externally visible user info',
     'type': 'object',
     'properties': {
-        'externalId': {
-            'description': 'Externally visible id',
-            'type': 'string'
+        'id': {
+            'description': 'The id of the user',
+            'type': 'integer'
+        },
+        'timeJoinedTs': {
+            'description': 'The time the user joined, in UTC',
+            'type': 'integer'
         },
         'name': {
             'description': 'The user\'s human name',
             'type': 'string'
         },
-        'timeJoinedTs': {
-            'description': 'The time the user joined, in UTC',
-            'type': 'integer'
+        'pictureUrl': {
+            'description': 'An URL with a picture for the user',
+            'type': 'string',
         }
     },
-    'required': ['externalId', 'name', 'timeJoinedTs']
+    'required': ['id', 'timeJoinedTs', 'name', 'pictureUrl'],
+    'addtionalProperties': False
 }
 
-AUTH_TOKEN = {
-    '$schema': 'http://json-schema.org/draft-04/schema#',
-    'title': 'AuthToken',
-    'description': 'The authentication token',
-    'type': 'object',
-    'properties': {
-        'token': {
-            'description': 'An opaque string, the actual token',
-            'type': 'string'
-        },
-        'expiryTimeTs': {
-            'description': 'The time the token expires, in UTC',
-            'type': 'integer'
-        }
-    },
-    'required': ['token', 'expiryTimeTs']
-}
-
-USERS_RESPONSE = {
+USER_RESPONSE = {
     '$schema': 'http://json-schema.org/draft-04/schema#',
     'title': 'Users resouces response',
-    'description': 'Response from the users resource',
+    'description': 'Response from the user resource',
     'type': 'object',
     'properties': {
         'user': USER,
-        'authToken': AUTH_TOKEN
     },
-    'required': ['user', 'authToken']
-}
-
-CHECK_EMAIL_ADDRESS_RESPONSE = {
-    '$schema': 'http://json-schema.org/draft-04/schema#',
-    'title': 'Check email address resource response',
-    'description': 'Response from the check email address resource',
-    'type': 'object',
-    'properties': {
-        'inUse': {
-            'description': 'Whether the email address is in use or not',
-            'type': 'boolean'
-        }
-    },
-    'required': ['inUse']
+    'required': ['user'],
+    'additionalProperties': False
 }
