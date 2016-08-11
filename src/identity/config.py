@@ -23,7 +23,7 @@ def by_environ(**kwargs):
     elif environ == 'STAGING':
         return eval_environ(kwargs['staging'])
     elif environ == 'LIVE':
-        return eval_environ(kwards['live'])
+        return eval_environ(kwargs['live'])
     else:
         raise Exception('Invalid application state')
 
@@ -52,12 +52,14 @@ DATABASE_URL = by_environ(
     local=local_postgres_uri,
     staging=lambda: os.environ['DATABASE_URL'],
     live=lambda: os.environ['DATABASE_URL'])
-AUTH0_DOMAIN=os.environ['AUTH0_DOMAIN']
+AUTH0_DOMAIN = os.environ['AUTH0_DOMAIN']
+CLIENTS = by_environ(
+    local=['localhost:10000'],
+    staging='',
+    live='')
 
 # WSGI config. Not exported, technically.
 bind = '{}:{}'.format(ADDRESS, PORT)
 workers = multiprocessing.cpu_count() * 2 + 1
 accesslog = '-'
 errorlog = '-'
-
-

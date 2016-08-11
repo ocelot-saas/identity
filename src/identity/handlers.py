@@ -1,11 +1,11 @@
 """Handlers for HTTP resources for the identity service."""
 
-import datetime
 import json
 import hashlib
 
 import falcon
 
+import identity.config as config
 import identity.validation as validation
 import identity.schemas as schemas
 import sqlalchemy as sql
@@ -24,12 +24,21 @@ _user = sql.Table(
 class UserResource(object):
     """A collection of users, linked to Auth0."""
 
-    def __init__(self, auth0_client, auth0_user_validator, id_token_header_validator, the_clock, sql_engine):
+    def __init__(self, auth0_client, auth0_user_validator, id_token_header_validator,
+                 the_clock, sql_engine):
         self._auth0_client = auth0_client
         self._auth0_user_validator = auth0_user_validator
         self._id_token_header_validator = id_token_header_validator
         self._the_clock = the_clock
         self._sql_engine = sql_engine
+
+        self._cors_clients = ','.join('http://{}'.format(c) for c in config.CLIENTS)
+
+    def on_options(self, req, resp):
+        """Check CORS is OK."""
+
+        resp.status = falcon.HTTP_204
+        self._cors_response(resp)
 
     def on_post(self, req, resp):
         """Create a particular user.
@@ -68,6 +77,7 @@ class UserResource(object):
         jsonschema.validate(response, schemas.USER_RESPONSE)
 
         resp.status = falcon.HTTP_201
+        self._cors_response(resp)
         resp.body = json.dumps(response)
 
     def on_get(self, req, resp):
@@ -104,6 +114,7 @@ class UserResource(object):
         jsonschema.validate(response, schemas.USER_RESPONSE)
 
         resp.status = falcon.HTTP_200
+        self._cors_response(resp)
         resp.body = json.dumps(response)
 
     def _get_auth0_user(self, req):
@@ -116,8 +127,8 @@ class UserResource(object):
                 description='Invalid value "{}" for Authorization header'.format(req.auth))
 
         try:
-           auth0_user_raw = self._auth0_client.userinfo(id_token)
-           auth0_user = self._auth0_user_validator.validate(auth0_user_raw)
+            auth0_user_raw = self._auth0_client.userinfo(id_token)
+            auth0_user = self._auth0_user_validator.validate(auth0_user_raw)
         except Exception as e:
             raise falcon.HTTPBadRequest(
                title='Something went wrong',
@@ -135,3 +146,8 @@ class UserResource(object):
         result.close()
 
         return user_row
+
+    def _cors_response(self, resp):
+        resp.append_header('Access-Control-Allow-Origin', self._cors_clients)
+        resp.append_header('Access-Control-Allow-Methods', 'OPTIONS, POST, GET')
+        resp.append_header('Access-Control-Allow-Headers', 'Authorization')
