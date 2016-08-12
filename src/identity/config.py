@@ -55,8 +55,8 @@ DATABASE_URL = by_environ(
 AUTH0_DOMAIN = os.environ['AUTH0_DOMAIN']
 CLIENTS = by_environ(
     local=['localhost:10000'],
-    staging='',
-    live='')
+    staging=['bucketeer-0657d779-f6ef-4fbe-8f88-5dfe9e308bbb.s3.amazonaws.com'],
+    live=[])
 
 # WSGI config. Not exported, technically.
 bind = '{}:{}'.format(ADDRESS, PORT)

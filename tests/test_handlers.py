@@ -1,5 +1,5 @@
 import unittest
-from mockito import mock
+import unittest.mock as mock
 
 import falcon.testing
 
