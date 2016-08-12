@@ -16,11 +16,11 @@ def readme():
 
 setup(
     name='identity',
-    version='0.0.26',
+    version='0.0.27',
     description='The identity service for Ocelot, as a Python package.',
     long_description=readme(),
     keywords='ocelot identity service rest api',
-    url='http://github.com/ocelot/identity',
+    url='http://github.com/ocelot-saas/identity',
     author='Horia Coman',
     author_email='horia141@gmail.com',
     license='All right reserved',
