@@ -54,9 +54,11 @@ class UserResource(object):
             user_row = self._fetch_user(conn, auth0_user_id_hash)
 
             if user_row is not None:
+                is_new = False
                 user_id = user_row.id
                 user_time_joined = user_row['time_joined']
             else:
+                is_new = True
                 create_user = _user \
                     .insert() \
                     .values(auth0_user_id_hash=auth0_user_id_hash, time_joined=right_now)
@@ -76,7 +78,7 @@ class UserResource(object):
 
         jsonschema.validate(response, schemas.USER_RESPONSE)
 
-        resp.status = falcon.HTTP_201
+        resp.status = falcon.HTTP_201 if is_new else falcon.HTTP_200
         self._cors_response(resp)
         resp.body = json.dumps(response)
 
