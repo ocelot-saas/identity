@@ -1,7 +1,7 @@
 import unittest
-import unittest.mock as mock
 
 import falcon.testing
+from mockito import mock
 
 import identity.handlers as identity
 

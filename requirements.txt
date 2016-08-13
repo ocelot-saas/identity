@@ -11,7 +11,8 @@ pytz==2016.4
 sqlalchemy>=1,<2
 yoyo-migrations>=5,<6
 
-# For testing.
-setuptools
-coveralls
-coverage
+# Duplicated from setup.py, for testing.
+coverage>=4,<5
+coveralls>=1,<2
+mockito>=0,<1
+setuptools>=25,<26

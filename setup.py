@@ -40,7 +40,13 @@ setup(
         'yoyo-migrations>=5,<6'
         ],
     test_suite='tests',
-    tests_require=[],
+    tests_require=[
+        # Duplicated from requirements.txt.
+        'coverage>=4,<5',
+        'coveralls>=1,<2',
+        'mockito>=0,<1',
+        'setuptools>=25,<26'
+    ],
     include_package_data=True,
     zip_safe=False
 )
