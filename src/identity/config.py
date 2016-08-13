@@ -3,7 +3,7 @@ import os
 
 # Application config.
 ENV = os.getenv('ENV')
-ADDRESS = '0.0.0.0'
+ADDRESS = os.getenv('ADDRESS')
 PORT = os.getenv('PORT')
 MIGRATIONS_PATH = os.getenv('MIGRATIONS_PATH')
 DATABASE_URL = os.getenv('DATABASE_URL')
