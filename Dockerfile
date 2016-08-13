@@ -42,7 +42,13 @@ COPY . /ocelot/pack/identity
 
 # Setup the runtime environment for the application.
 
-ENV ENVIRON LOCAL
+ENV ENV LOCAL
+ENV PORT 10000
+ENV MIGRATIONS_PATH /ocelot/pack/identity/migrations
+ENV DATABASE_URL postgresql://ocelot:ocelot@ocelot-postgres:5432/ocelot
+ENV AUTH0_DOMAIN ocelot-saas.eu.auth0.com
+ENV CLIENTS localhost:10000
+ENV PYTHONPATH /ocelot/pack/identity/src
 
 RUN chown -R ocelot:ocelot /ocelot
 VOLUME ["/ocelot/pack/identity/src"]
