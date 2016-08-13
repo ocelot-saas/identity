@@ -130,6 +130,7 @@ class UserResource(object):
 
         try:
             auth0_user_raw = self._auth0_client.userinfo(id_token)
+            # TODO(horia141): properly handle unaurhotized here.
             auth0_user = self._auth0_user_validator.validate(auth0_user_raw)
         except Exception as e:
             raise falcon.HTTPBadRequest(
