@@ -11,12 +11,13 @@ addons:
     - libpq-dev
 
 env:
-- ENV=TEST
-- PORT=10000
-- MIGRATIONS_PATH=migrations
-- DATABASE_URL=null
-- AUTH0_DOMAIN=null
-- CLIENTS=null
+  global:
+  - ENV=TEST
+  - PORT=10000
+  - MIGRATIONS_PATH=migrations
+  - DATABASE_URL=null
+  - AUTH0_DOMAIN=null
+  - CLIENTS=null
 
 install:
 - pip install -r requirements.txt
