@@ -1,9 +1,10 @@
-"""Create the Users table."""
+"""Create the user table."""
 
 from yoyo import step
 
 
 __depends__ = ['0001.create_schema']
+
 
 step("""
 CREATE TABLE identity.user (

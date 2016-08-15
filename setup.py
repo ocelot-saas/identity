@@ -16,7 +16,7 @@ def readme():
 
 setup(
     name='identity',
-    version='1.0.2',
+    version='1.0.3',
     description='The identity service for Ocelot, as a Python package.',
     long_description=readme(),
     keywords='ocelot identity service rest api',
@@ -36,6 +36,7 @@ setup(
         'jsonschema>=2,<3',
         'psycopg2>=2,<3',
         'pytz==2016.4',
+        'requests>=2,<3',
         'sqlalchemy>=1,<2',
         'yoyo-migrations>=5,<6'
         ],

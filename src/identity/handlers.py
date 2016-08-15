@@ -137,10 +137,14 @@ class UserResource(object):
             auth0_user = self._auth0_user_validator.validate(auth0_user_raw)
         except falcon.HTTPUnauthorized:
             raise
+        except validation.Error as e:
+            raise falcon.HTTPInternalServerError(
+                title='Could not parse response from Auth0',
+                description='Could not parse response from Auth0') from e
         except Exception as e:
             raise falcon.HTTPBadGateway(
-               title='Cannot not retrieve data from Auth0',
-               description='Could not retrieve data from Auth0') from e
+                title='Cannot retrieve data from Auth0',
+                description='Could not retrieve data from Auth0') from e
 
         return (auth0_user, hashlib.sha256(auth0_user['user_id'].encode('utf-8')).hexdigest())
 
