@@ -12,14 +12,14 @@ class UserResourceTestCase(falcon.testing.TestCase):
 
         auth0_client = mock()
         auth0_user_validator = mock()
-        id_token_header_validator = mock()
+        access_token_header_validator = mock()
         the_clock = mock()
         sql_engine = mock()
 
         user_resource = identity.UserResource(
             auth0_client=auth0_client,
             auth0_user_validator=auth0_user_validator,
-            id_token_header_validator=id_token_header_validator,
+            access_token_header_validator=access_token_header_validator,
             the_clock=the_clock,
             sql_engine=sql_engine)
 
