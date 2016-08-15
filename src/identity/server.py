@@ -19,14 +19,14 @@ app = falcon.API()
 
 auth0_client = auth0.Users(config.AUTH0_DOMAIN)
 auth0_user_validator = validation.Auth0UserValidator()
-id_token_header_validator = validation.IdTokenHeaderValidator()
+access_token_header_validator = validation.AccessTokenHeaderValidator()
 the_clock = clock.Clock()
 sql_engine = sqlalchemy.create_engine(config.DATABASE_URL, echo=True)
 
 user_resource = identity.UserResource(
     auth0_client=auth0_client,
     auth0_user_validator=auth0_user_validator,
-    id_token_header_validator=id_token_header_validator,
+    access_token_header_validator=access_token_header_validator,
     the_clock=the_clock,
     sql_engine=sql_engine)
 

@@ -24,11 +24,11 @@ _user = sql.Table(
 class UserResource(object):
     """A collection of users, linked to Auth0."""
 
-    def __init__(self, auth0_client, auth0_user_validator, id_token_header_validator,
+    def __init__(self, auth0_client, auth0_user_validator, access_token_header_validator,
                  the_clock, sql_engine):
         self._auth0_client = auth0_client
         self._auth0_user_validator = auth0_user_validator
-        self._id_token_header_validator = id_token_header_validator
+        self._access_token_header_validator = access_token_header_validator
         self._the_clock = the_clock
         self._sql_engine = sql_engine
 
@@ -101,7 +101,7 @@ class UserResource(object):
 
             if user_row is None:
                 raise falcon.HTTPNotFound(
-                    title='Something went wrong',
+                    title='User does not exist',
                     description='User does not exist')
 
         response = {
@@ -120,22 +120,27 @@ class UserResource(object):
         resp.body = json.dumps(response)
 
     def _get_auth0_user(self, req):
-        # TODO(horia141): make this prettier.
         try:
-            id_token = self._id_token_header_validator.validate(req.auth)
-        except validation.Error:
+            access_token = self._access_token_header_validator.validate(req.auth)
+        except validation.Error as e:
             raise falcon.HTTPBadRequest(
                 title='Invalid Authorization header',
-                description='Invalid value "{}" for Authorization header'.format(req.auth))
+                description='Invalid value "{}" for Authorization header'.format(req.auth)) from e
 
         try:
-            auth0_user_raw = self._auth0_client.userinfo(id_token)
-            # TODO(horia141): properly handle unaurhotized here.
+            auth0_user_raw = self._auth0_client.userinfo(access_token)
+            if auth0_user_raw == 'Unauthorized':
+                raise falcon.HTTPUnauthorized(
+                    title='Could not retrieve data from Auth0',
+                    description='Auth0 refused to authorized with accesss token "{}"'.format(access_token),
+                    challenges='Bearer')
             auth0_user = self._auth0_user_validator.validate(auth0_user_raw)
+        except falcon.HTTPUnauthorized:
+            raise
         except Exception as e:
-            raise falcon.HTTPBadRequest(
-               title='Something went wrong',
-               description='Cannot retrieve data from Auth0 because "{}"'.format(str(e)))
+            raise falcon.HTTPBadGateway(
+               title='Cannot not retrieve data from Auth0',
+               description='Could not retrieve data from Auth0') from e
 
         return (auth0_user, hashlib.sha256(auth0_user['user_id'].encode('utf-8')).hexdigest())
 
