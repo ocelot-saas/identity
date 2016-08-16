@@ -91,13 +91,7 @@ class UserResource(object):
         (auth0_user, auth0_user_id_hash) = self._get_auth0_user(req)
 
         with self._sql_engine.begin() as conn:
-            fetch_by_auth0_user_id_hash = sql.sql \
-                .select([_user]) \
-                .where(_user.c.auth0_user_id_hash == auth0_user_id_hash)
-
-            result = conn.execute(fetch_by_auth0_user_id_hash)
-            user_row = result.fetchone()
-            result.close()
+            user_row = self._fetch_user(conn, auth0_user_id_hash)
 
             if user_row is None:
                 raise falcon.HTTPNotFound(
