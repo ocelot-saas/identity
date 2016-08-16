@@ -47,7 +47,7 @@ class AuthMiddleware(object):
             user_get_req.raise_for_status()
             user_json = json.loads(user_get_req.text)
             jsonschema.validate(user_json, schemas.USER_RESPONSE)
-            req.user = user_json['user']
+            req.context['user'] = user_json['user']
         except validation.Error as e:
             raise falcon.HTTPBadRequest(
                 title='Invalid Authorization header',
