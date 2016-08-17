@@ -2,7 +2,6 @@
 
 import re
 import json
-import json.decoder
 
 import identity.schemas as schemas
 import jsonschema
@@ -28,7 +27,7 @@ class Auth0UserValidator(object):
         try:
             auth0_user = json.loads(auth0_user_raw)
             jsonschema.validate(auth0_user, schemas.AUTH0_USER_RESPONSE)
-        except json.decoder.JSONDecodeError as e:
+        except json.JSONDecodeError as e:
             raise Error('Could not decode Auth0 JSON response') from e
         except jsonschema.ValidationError as e:
             raise Error('Could not validate Auth0 user data') from e
