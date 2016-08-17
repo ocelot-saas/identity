@@ -70,7 +70,7 @@ class AuthMiddleware(object):
                 raise falcon.HTTPBadGateway(
                     title='Cannot retrieve data from identity service',
                     description='Could not retrieve data from identity service') from e
-        except (json.JSONDecodeError, jsonschema.ValidationError) as e:
+        except (ValueError, jsonschema.ValidationError) as e:
             raise falcon.HTTPInternalServerError(
                     title='Cannot decode data from identity service',
                     description='Could not decode data from identity service') from e

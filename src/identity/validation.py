@@ -27,7 +27,7 @@ class Auth0UserValidator(object):
         try:
             auth0_user = json.loads(auth0_user_raw)
             jsonschema.validate(auth0_user, schemas.AUTH0_USER_RESPONSE)
-        except json.JSONDecodeError as e:
+        except ValueError as e:
             raise Error('Could not decode Auth0 JSON response') from e
         except jsonschema.ValidationError as e:
             raise Error('Could not validate Auth0 user data') from e
