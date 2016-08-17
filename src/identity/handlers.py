@@ -51,26 +51,22 @@ class UserResource(object):
         (auth0_user, auth0_user_id_hash) = self._get_auth0_user(req)
 
         with self._sql_engine.begin() as conn:
-            user_row = self._fetch_user(conn, auth0_user_id_hash)
-
-            if user_row is not None:
-                is_new = False
-                user_id = user_row.id
-                user_time_joined = user_row['time_joined']
-            else:
-                is_new = True
+            try:
                 create_user = _user \
                     .insert() \
                     .values(auth0_user_id_hash=auth0_user_id_hash, time_joined=right_now)
                 result = conn.execute(create_user)
-                user_id = result.lastrowid
-                user_time_joined = right_now
+                user_id = result.inserted_primary_key[0]
                 result.close()
+            except sql.exc.IntegrityError as e:
+                raise falcon.HTTPConflict(
+                    title='User already exists',
+                    description='User already exists') from e
 
         response = {
             'user': {
                 'id': user_id,
-                'timeJoinedTs': int(user_time_joined.timestamp()),
+                'timeJoinedTs': int(right_now.timestamp()),
                 'name': auth0_user['name'],
                 'pictureUrl': auth0_user['picture']
             }
@@ -78,7 +74,7 @@ class UserResource(object):
 
         jsonschema.validate(response, schemas.USER_RESPONSE)
 
-        resp.status = falcon.HTTP_201 if is_new else falcon.HTTP_200
+        resp.status = falcon.HTTP_201
         self._cors_response(resp)
         resp.body = json.dumps(response)
 
@@ -91,7 +87,13 @@ class UserResource(object):
         (auth0_user, auth0_user_id_hash) = self._get_auth0_user(req)
 
         with self._sql_engine.begin() as conn:
-            user_row = self._fetch_user(conn, auth0_user_id_hash)
+            fetch_by_auth0_user_id_hash = sql.sql \
+                .select([_user]) \
+                .where(_user.c.auth0_user_id_hash == auth0_user_id_hash)
+
+            result = conn.execute(fetch_by_auth0_user_id_hash)
+            user_row = result.fetchone()
+            result.close()
 
             if user_row is None:
                 raise falcon.HTTPNotFound(
@@ -141,17 +143,6 @@ class UserResource(object):
                 description='Could not retrieve data from Auth0') from e
 
         return (auth0_user, hashlib.sha256(auth0_user['user_id'].encode('utf-8')).hexdigest())
-
-    def _fetch_user(self, conn, auth0_user_id_hash):
-        fetch_by_auth0_user_id_hash = sql.sql \
-            .select([_user]) \
-            .where(_user.c.auth0_user_id_hash == auth0_user_id_hash)
-
-        result = conn.execute(fetch_by_auth0_user_id_hash)
-        user_row = result.fetchone()
-        result.close()
-
-        return user_row
 
     def _cors_response(self, resp):
         resp.append_header('Access-Control-Allow-Origin', self._cors_clients)

@@ -13,7 +13,7 @@ CREATE TABLE identity.user (
     time_joined TIMESTAMP NOT NULL,
     PRIMARY KEY (id)
 );
-CREATE INDEX user_auth0_user_id_hash ON identity.user(auth0_user_id_hash);
+CREATE UNIQUE INDEX user_auth0_user_id_hash ON identity.user(auth0_user_id_hash);
 """, """
 DROP INDEX IF EXISTS identity.user_auth0_user_id_hash;
 DROP TABLE IF EXISTS identity.user;
