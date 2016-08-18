@@ -46,6 +46,8 @@ class UserResource(object):
         Requires the Authorization header to be present and contain an JWT for Auth0.
         """
 
+        self._cors_response(resp)
+
         right_now = self._the_clock.now()
 
         (auth0_user, auth0_user_id_hash) = self._get_auth0_user(req)
@@ -75,7 +77,6 @@ class UserResource(object):
         jsonschema.validate(response, schemas.USER_RESPONSE)
 
         resp.status = falcon.HTTP_201
-        self._cors_response(resp)
         resp.body = json.dumps(response)
 
     def on_get(self, req, resp):
@@ -83,6 +84,8 @@ class UserResource(object):
 
         Requires the Authorization header to be present and contain an JWT from Auth0.
         """
+
+        self._cors_response(resp)
 
         (auth0_user, auth0_user_id_hash) = self._get_auth0_user(req)
 
@@ -112,7 +115,6 @@ class UserResource(object):
         jsonschema.validate(response, schemas.USER_RESPONSE)
 
         resp.status = falcon.HTTP_200
-        self._cors_response(resp)
         resp.body = json.dumps(response)
 
     def _get_auth0_user(self, req):
