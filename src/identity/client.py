@@ -38,6 +38,10 @@ class AuthMiddleware(object):
             else validation.AccessTokenHeaderValidator()
 
     def process_resource(self, req, resp, resource, params):
+        # No auth is expected on the OPTIONS header.
+        if req.method == 'OPTIONS':
+            return
+        
         try:
             access_token = self._access_token_header_validator.validate(req.auth)
             user_get_req = requests.get(
