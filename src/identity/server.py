@@ -2,20 +2,22 @@
 
 from wsgiref import simple_server
 
-import falcon
-import auth0.v2.authentication as auth0
-
 import clock
+import auth0.v2.authentication as auth0
+import falcon
+import falcon_cors
+import sqlalchemy
+
 import identity.config as config
 import identity.handlers as identity
 import identity.validation as validation
-import sqlalchemy
 
+cors_middleware = falcon_cors.CORS(
+    allow_origins_list=config.CLIENTS,
+    allow_headers_list=['Authorization', 'Content-Type'],
+    allow_all_methods=True).middleware
 
-# /user
-#   POST creates a user, via Auth0
-#   GET retrieves a user, via Auth0
-app = falcon.API()
+app = falcon.API(middleware=[cors_middleware])
 
 auth0_client = auth0.Users(config.AUTH0_DOMAIN)
 auth0_user_validator = validation.Auth0UserValidator()

@@ -4,12 +4,11 @@ import json
 import hashlib
 
 import falcon
+import jsonschema
+import sqlalchemy as sql
 
-import identity.config as config
 import identity.validation as validation
 import identity.schemas as schemas
-import sqlalchemy as sql
-import jsonschema
 
 
 _metadata = sql.MetaData(schema='identity')
@@ -32,21 +31,11 @@ class UserResource(object):
         self._the_clock = the_clock
         self._sql_engine = sql_engine
 
-        self._cors_clients = ','.join('http://{}'.format(c) for c in config.CLIENTS)
-
-    def on_options(self, req, resp):
-        """Check CORS is OK."""
-
-        resp.status = falcon.HTTP_204
-        self._cors_response(resp)
-
     def on_post(self, req, resp):
         """Create a particular user.
 
         Requires the Authorization header to be present and contain an JWT for Auth0.
         """
-
-        self._cors_response(resp)
 
         right_now = self._the_clock.now()
 
@@ -84,8 +73,6 @@ class UserResource(object):
 
         Requires the Authorization header to be present and contain an JWT from Auth0.
         """
-
-        self._cors_response(resp)
 
         (auth0_user, auth0_user_id_hash) = self._get_auth0_user(req)
 
@@ -145,8 +132,3 @@ class UserResource(object):
                 description='Could not retrieve data from Auth0') from e
 
         return (auth0_user, hashlib.sha256(auth0_user['user_id'].encode('utf-8')).hexdigest())
-
-    def _cors_response(self, resp):
-        resp.append_header('Access-Control-Allow-Origin', self._cors_clients)
-        resp.append_header('Access-Control-Allow-Methods', 'OPTIONS, POST, GET')
-        resp.append_header('Access-Control-Allow-Headers', 'Authorization, Content-Type')
