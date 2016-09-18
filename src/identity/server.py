@@ -10,7 +10,21 @@ import sqlalchemy
 
 import identity.config as config
 import identity.handlers as identity
+import identity.model as model
 import identity.validation as validation
+
+auth0_client = auth0.Users(config.AUTH0_DOMAIN)
+auth0_user_validator = validation.Auth0UserValidator()
+access_token_header_validator = validation.AccessTokenHeaderValidator()
+the_clock = clock.Clock()
+sql_engine = sqlalchemy.create_engine(config.DATABASE_URL, echo=True)
+model = model.Model(the_clock=the_clock, sql_engine=sql_engine)
+
+user_resource = identity.UserResource(
+    auth0_client=auth0_client,
+    auth0_user_validator=auth0_user_validator,
+    access_token_header_validator=access_token_header_validator,
+    model=model)
 
 cors_middleware = falcon_cors.CORS(
     allow_origins_list=config.CLIENTS,
@@ -18,19 +32,6 @@ cors_middleware = falcon_cors.CORS(
     allow_all_methods=True).middleware
 
 app = falcon.API(middleware=[cors_middleware])
-
-auth0_client = auth0.Users(config.AUTH0_DOMAIN)
-auth0_user_validator = validation.Auth0UserValidator()
-access_token_header_validator = validation.AccessTokenHeaderValidator()
-the_clock = clock.Clock()
-sql_engine = sqlalchemy.create_engine(config.DATABASE_URL, echo=True)
-
-user_resource = identity.UserResource(
-    auth0_client=auth0_client,
-    auth0_user_validator=auth0_user_validator,
-    access_token_header_validator=access_token_header_validator,
-    the_clock=the_clock,
-    sql_engine=sql_engine)
 
 app.add_route('/user', user_resource)
 
