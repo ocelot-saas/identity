@@ -10,6 +10,7 @@ jsonschema>=2,<3
 psycopg2>=2,<3
 pytz==2016.4
 requests>=2,<3
+retry>=0,<1
 sqlalchemy>=1,<2
 yoyo-migrations>=5,<6
 

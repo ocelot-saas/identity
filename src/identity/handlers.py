@@ -5,6 +5,7 @@ import hashlib
 
 import falcon
 import jsonschema
+import retry
 import sqlalchemy as sql
 
 import identity.model as model
@@ -68,7 +69,7 @@ class UserResource(object):
             raise falcon.HTTPNotFound(
                 title='User does not exist',
                 description='User does not exist')
-
+            
         response = {
             'user': {
                 'id': user['id'],
@@ -83,6 +84,7 @@ class UserResource(object):
         resp.status = falcon.HTTP_200
         resp.body = json.dumps(response)
 
+    @retry.retry((validation.Error), tries=3)
     def _get_auth0_user(self, req):
         try:
             access_token = self._access_token_header_validator.validate(req.auth)
