@@ -6,25 +6,21 @@ MAINTAINER Horia Coman <horia141@gmail.com>
 
 RUN apt-get update -y && \
     apt-get install -y --no-install-recommends \
-            python3 \
-            python3-pip \
-            python3-dev \
             build-essential \
             libffi-dev \
-	    libpq-dev \
-            libssl-dev && \
+            libpq-dev \
+            libssl-dev \
+            python3 \
+            python3-dev \
+            python3-pip \
+            python3-setuptools && \
     apt-get clean
-
-RUN pip3 install setuptools
 
 # Setup directory structure.
 
 RUN mkdir /ocelot
 RUN mkdir /ocelot/pack
-RUN mkdir /ocelot/pack/identity
 RUN mkdir /ocelot/var
-RUN mkdir /ocelot/var/db
-RUN mkdir /ocelot/var/db/identity
 
 # Setup users and groups.
 
@@ -33,27 +29,27 @@ RUN groupadd ocelot && \
 
 # Install package requirements.
 
-COPY requirements.txt /ocelot/pack/identity/requirements.txt
-RUN cd /ocelot/pack/identity && pip3 install -r requirements.txt
+COPY requirements.txt /ocelot/pack/requirements.txt
+RUN cd /ocelot/pack && pip3 install -r requirements.txt
 
 # Copy source code.
 
-COPY . /ocelot/pack/identity
+COPY . /ocelot/pack
 
 # Setup the runtime environment for the application.
 
 ENV ENV LOCAL
 ENV ADDRESS 0.0.0.0
 ENV PORT 10000
-ENV MIGRATIONS_PATH /ocelot/pack/identity/migrations
+ENV MIGRATIONS_PATH /ocelot/pack/migrations
 ENV DATABASE_URL postgresql://ocelot:ocelot@ocelot-postgres:5432/ocelot
 ENV AUTH0_DOMAIN ocelot-saas.eu.auth0.com
 ENV CLIENTS localhost:10000
-ENV PYTHONPATH /ocelot/pack/identity/src
+ENV PYTHONPATH /ocelot/pack/src
 
 RUN chown -R ocelot:ocelot /ocelot
-VOLUME ["/ocelot/pack/identity/src"]
-WORKDIR /ocelot/pack/identity/src
+VOLUME ["/ocelot/pack/src"]
+WORKDIR /ocelot/pack/src
 EXPOSE 10000
 USER ocelot
 ENTRYPOINT ["gunicorn", "--config", "identity/config.py", "identity.server:app"]
