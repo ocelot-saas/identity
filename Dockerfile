@@ -44,7 +44,7 @@ ENV PORT 10000
 ENV MIGRATIONS_PATH /ocelot/pack/migrations
 ENV DATABASE_URL postgresql://ocelot:ocelot@ocelot-postgres:5432/ocelot
 ENV AUTH0_DOMAIN ocelot-saas.eu.auth0.com
-ENV CLIENTS localhost:10000
+ENV CLIENTS ocelot-inventory:10000,localhost:10000
 ENV PYTHONPATH /ocelot/pack/src
 
 RUN chown -R ocelot:ocelot /ocelot
