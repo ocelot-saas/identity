@@ -83,4 +83,4 @@ class AuthMiddleware(object):
 
             raise falcon.HTTPInternalServerError(
                     title='Unkown error when retrieving data from identity service',
-                    description='Unkown error when retrieving data from identity service') from e
+                    description='Unkown error when retrieving data from identity service {}'.format(e)) from e
