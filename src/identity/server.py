@@ -13,6 +13,12 @@ import identity.handlers as identity
 import identity.model as model
 import identity.validation as validation
 
+
+def debug_error_handler(ex, req, resp, params):
+    print(ex)
+    raise ex
+
+
 auth0_client = auth0.Users(config.AUTH0_DOMAIN)
 auth0_user_validator = validation.Auth0UserValidator()
 access_token_header_validator = validation.AccessTokenHeaderValidator()
@@ -32,6 +38,9 @@ cors_middleware = falcon_cors.CORS(
     allow_all_methods=True).middleware
 
 app = falcon.API(middleware=[cors_middleware])
+
+if config.ENV != 'PROD':
+    app.add_error_handler(Exception, handler=debug_error_handler)
 
 app.add_route('/user', user_resource)
 
