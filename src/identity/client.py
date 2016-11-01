@@ -80,6 +80,7 @@ class AuthMiddleware(object):
                     description='Could not decode data from identity service') from e
         except Exception as e:
             print(e)
+
             raise falcon.HTTPInternalServerError(
                     title='Unkown error when retrieving data from identity service',
                     description='Unkown error when retrieving data from identity service') from e
