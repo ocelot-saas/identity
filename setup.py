@@ -16,7 +16,7 @@ def readme():
 
 setup(
     name='identity',
-    version='1.1.5',
+    version='1.1.6',
     description='The identity service for Ocelot, as a Python package.',
     long_description=readme(),
     keywords='ocelot identity service rest api',
