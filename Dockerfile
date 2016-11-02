@@ -43,12 +43,13 @@ ENV ADDRESS 0.0.0.0
 ENV PORT 10000
 ENV MIGRATIONS_PATH /ocelot/pack/migrations
 ENV DATABASE_URL postgresql://ocelot:ocelot@ocelot-postgres:5432/ocelot
-ENV AUTH0_DOMAIN ocelot-saas.eu.auth0.com
+ENV AUTH0_DOMAIN null # Provided by secrets
 ENV CLIENTS ocelot-inventory:10000,localhost:10000
 ENV PYTHONPATH /ocelot/pack/src
 
 RUN chown -R ocelot:ocelot /ocelot
 VOLUME ["/ocelot/pack/src"]
+VOLUME ["/ocelot/var/secrets.json"]
 WORKDIR /ocelot/pack/src
 EXPOSE 10000
 USER ocelot
