@@ -7,11 +7,11 @@ falcon>=1,<2
 falcon-cors>=1,<2
 gunicorn>=19,<20
 jsonschema>=2,<3
-startup-migrations==0.0.2
 pytz==2016.4
 requests>=2,<3
 retry>=0,<1
 sqlalchemy>=1,<2
+startup-migrations==0.0.2
 
 # Duplicated from setup.py, for testing.
 coverage>=4,<5

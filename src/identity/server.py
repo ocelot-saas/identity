@@ -6,8 +6,8 @@ import auth0.v2.authentication as auth0
 import clock
 import falcon
 import falcon_cors
-import startup_migrations
 import sqlalchemy
+import startup_migrations
 
 import identity.config as config
 import identity.handlers as identity
