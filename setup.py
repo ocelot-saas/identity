@@ -16,7 +16,7 @@ def readme():
 
 setup(
     name='identity',
-    version='1.2.1',
+    version='1.3.0',
     description='The identity service for Ocelot, as a Python package.',
     long_description=readme(),
     keywords='ocelot-saas identity service rest api',
@@ -35,12 +35,11 @@ setup(
         'falcon-cors>=1,<2',
         'gunicorn>=19,<20',
         'jsonschema>=2,<3',
-        'psycopg2>=2,<3',
+        'startup-migrations==0.0.2',
         'pytz==2016.4',
         'requests>=2,<3',
         'retry>=0,<1',
-        'sqlalchemy>=1,<2',
-        'yoyo-migrations>=5,<6'
+        'sqlalchemy>=1,<2'
         ],
     test_suite='tests',
     tests_require=[

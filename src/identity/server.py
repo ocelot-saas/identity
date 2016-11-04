@@ -2,10 +2,11 @@
 
 from wsgiref import simple_server
 
-import clock
 import auth0.v2.authentication as auth0
+import clock
 import falcon
 import falcon_cors
+import startup_migrations
 import sqlalchemy
 
 import identity.config as config
@@ -17,6 +18,9 @@ import identity.validation as validation
 def debug_error_handler(ex, req, resp, params):
     print(ex)
     raise ex
+
+
+startup_migrations.migrate(config.DATABASE_URL, config.MIGRATIONS_PATH)
 
 
 auth0_client = auth0.Users(config.AUTH0_DOMAIN)
