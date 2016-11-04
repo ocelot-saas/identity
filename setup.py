@@ -34,7 +34,7 @@ setup(
         'falcon>=1,<2',
         'falcon-cors>=1,<2',
         'gunicorn>=19,<20',
-        'jsonschema>=2,<3'
+        'jsonschema>=2,<3',
         'pytz==2016.4',
         'requests>=2,<3',
         'retry>=0,<1',
