@@ -42,7 +42,7 @@ class AuthMiddleware(object):
         if req.method == 'OPTIONS':
             return
 
-        if hasattr(resource, 'AUTH_NOT_REQUIRED') and resouce.AUTH_NOT_REQUIRED:
+        if hasattr(resource, 'AUTH_NOT_REQUIRED') and resource.AUTH_NOT_REQUIRED:
             return
         
         try:
