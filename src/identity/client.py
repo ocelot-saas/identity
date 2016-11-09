@@ -41,6 +41,9 @@ class AuthMiddleware(object):
         # No auth is expected on the OPTIONS header.
         if req.method == 'OPTIONS':
             return
+
+        if hasattr(req, 'AUTH_NOT_REQUIRED') and req.AUTH_NOT_REQUIRED:
+            return
         
         try:
             access_token = self._access_token_header_validator.validate(req.auth)
