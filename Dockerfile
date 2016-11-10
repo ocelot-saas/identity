@@ -41,6 +41,7 @@ COPY . /ocelot-saas/pack
 ENV ENV LOCAL
 ENV ADDRESS 0.0.0.0
 ENV PORT 10000
+ENV MASTER_DOMAIN ocelot.com
 ENV MIGRATIONS_PATH /ocelot-saas/pack/migrations
 ENV DATABASE_URL postgresql://ocelot-saas:ocelot-saas@ocelot-saas-postgres:5432/ocelot-saas
 ENV AUTH0_DOMAIN null # Provided by secrets

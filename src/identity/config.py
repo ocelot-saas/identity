@@ -7,6 +7,7 @@ import os
 ENV = os.getenv('ENV')
 ADDRESS = os.getenv('ADDRESS')
 PORT = os.getenv('PORT')
+MASTER_DOMAIN = os.getenv('MASTER_DOMAIN')
 MIGRATIONS_PATH = os.getenv('MIGRATIONS_PATH')
 DATABASE_URL = os.getenv('DATABASE_URL')
 CLIENTS = ['http://{}'.format(c) for c in os.getenv('CLIENTS').split(',')]
